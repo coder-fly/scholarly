@@ -267,9 +267,12 @@ class Navigator(object, metaclass=Singleton):
         """
         soup, html = self._get_soup(url)
         publication_parser = PublicationParser(self)
-        pub = publication_parser.get_publication(soup.find_all('div', 'gs_or')[0], PublicationSource.PUBLICATION_SEARCH_SNIPPET)
-        if filled:
-            pub = publication_parser.fill(pub)
+        try:
+            pub = publication_parser.get_publication(soup.find_all('div', 'gs_or')[0], PublicationSource.PUBLICATION_SEARCH_SNIPPET)
+            if filled:
+                pub = publication_parser.fill(pub)
+        except:
+            pub = {}
         return pub, html
 
     def search_publications(self, url: str) -> _SearchScholarIterator:
