@@ -230,7 +230,7 @@ class Navigator(object, metaclass=Singleton):
             self.publib = res.find('div', id='gs_res_glb').get('data-sva')
         except Exception:
             pass
-        return res
+        return res, html
 
     def search_authors(self, url: str)->Author:
         """Generator that returns Author objects from the author search page"""
@@ -265,12 +265,12 @@ class Navigator(object, metaclass=Singleton):
         :returns: a publication object
         :rtype: {Publication}
         """
-        soup = self._get_soup(url)
+        soup, html = self._get_soup(url)
         publication_parser = PublicationParser(self)
         pub = publication_parser.get_publication(soup.find_all('div', 'gs_or')[0], PublicationSource.PUBLICATION_SEARCH_SNIPPET)
         if filled:
             pub = publication_parser.fill(pub)
-        return pub
+        return pub, html
 
     def search_publications(self, url: str) -> _SearchScholarIterator:
         """Returns a Publication Generator given a url
